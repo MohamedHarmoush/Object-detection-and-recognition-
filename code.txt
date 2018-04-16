@@ -1,0 +1,27 @@
+cc = bwconncomp(NewImage);
+rmdir Testing s
+mkdir Testing
+cd Testing
+for i=1:cc.NumObjects
+    n = cc.PixelIdxList{1,i};
+    [N , ~] = size(n);
+    dfsminx=100000000;
+    dfsminy=100000000;
+    dfsmaxx=0;
+    dfsmaxy=0;
+    for j=1:N
+        idx = n(j);
+        [row , col] = ind2sub([W,H],idx);
+      
+       dfsminx=min(dfsminx,row);
+       dfsminy=min(dfsminy,col);
+       dfsmaxx=max(dfsmaxx,row);
+       dfsmaxy=max(dfsmaxy,col);       
+    end
+    
+    tmp = imcrop(NewImage,[dfsminy-1 dfsminx-1 dfsmaxy-dfsminy+2 dfsmaxx-dfsminx+2]);
+    tmp = imresize(tmp , [100 100]);
+    name =int2str(i);
+    name = strcat(name , '.jpg');
+    imwrite(tmp,name);
+end
